@@ -1,0 +1,488 @@
+.modalBackdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.75);
+	backdrop-filter: blur(4px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+	padding: 2rem;
+	overflow-y: auto;
+	animation: fadeIn 0.3s ease-out;
+}
+
+.modalBackdrop.closing {
+	animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+.modalContent {
+	position: relative;
+	background: linear-gradient(145deg, #3a3456 0%, #2d2942 50%, #292940 100%);
+	border-radius: 16px;
+	padding: 2.5rem;
+	max-width: 900px;
+	width: 100%;
+	max-height: 90vh;
+	overflow-y: auto;
+	border: 1px solid rgba(110, 86, 244, 0.2);
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+	animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modalContent.closing {
+	animation: scaleOut 0.3s ease-out forwards;
+}
+
+@keyframes scaleIn {
+	from {
+		transform: scale(0.9);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes scaleOut {
+	from {
+		transform: scale(1);
+		opacity: 1;
+	}
+	to {
+		transform: scale(0.9);
+		opacity: 0;
+	}
+}
+
+.closeBtn {
+	position: sticky;
+	top: 0px;
+	margin-left: auto;
+	margin-bottom: -40px;
+	float: right;
+	background: rgba(255, 59, 92, 0.15);
+	backdrop-filter: blur(10px);
+	border: none;
+	width: 40px;
+	height: 40px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #ff3b5c;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	z-index: 10;
+}
+
+.closeBtn:hover {
+	background: rgba(255, 59, 92, 0.25);
+	transform: rotate(90deg);
+}
+
+.modalTitle {
+	font-size: 28px;
+	font-weight: 700;
+	color: #f5f6fa;
+	margin: 0 0 2rem 0;
+	text-align: center;
+}
+
+.detailsGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2rem;
+	margin-bottom: 2rem;
+}
+
+.leftColumn,
+.rightColumn {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.infoGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.infoLabel {
+	font-size: 14px;
+	font-weight: 600;
+	color: #8b92b0;
+	margin: 0;
+}
+
+.infoValue {
+	font-size: 16px;
+	font-weight: 600;
+	color: #f5f6fa;
+	margin: 0;
+}
+
+.teamMembersTitle {
+	font-size: 16px;
+	font-weight: 600;
+	color: #8b92b0;
+	margin: 0 0 0.75rem 0;
+}
+
+.teamMembersList {
+	list-style: none;
+	counter-reset: team-counter;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.teamMember {
+	counter-increment: team-counter;
+	font-size: 15px;
+	color: #f5f6fa;
+	position: relative;
+	padding-left: 1.75rem;
+}
+
+.teamMember::before {
+	content: counter(team-counter) '.';
+	position: absolute;
+	left: 0;
+	color: #8b92b0;
+	font-weight: 600;
+}
+
+.evidenceSection {
+	margin-bottom: 2rem;
+}
+
+.evidenceTitle {
+	font-size: 18px;
+	font-weight: 600;
+	color: #f5f6fa;
+	margin: 0 0 1.5rem 0;
+	text-align: center;
+}
+
+.imageCarousel {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	justify-content: center;
+}
+
+.carouselBtn {
+	background: rgba(110, 86, 244, 0.15);
+	border: 1px solid rgba(110, 86, 244, 0.3);
+	width: 50px;
+	height: 50px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #8b7af7;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+}
+
+.carouselBtn:hover:not(:disabled) {
+	background: rgba(110, 86, 244, 0.25);
+	transform: scale(1.05);
+}
+
+.carouselBtn:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+}
+
+.imageContainer {
+	position: relative;
+	flex: 1;
+	max-width: 500px;
+	min-height: 350px;
+	border-radius: 12px;
+	overflow: hidden;
+	background: #1a1d29;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.evidenceImage {
+	width: 100%;
+	height: auto;
+	max-height: 400px;
+	object-fit: cover;
+	display: block;
+}
+
+.imageLoader {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #1a1d29;
+	z-index: 1;
+}
+
+.spinner {
+	width: 50px;
+	height: 50px;
+	border: 4px solid rgba(110, 86, 244, 0.2);
+	border-top-color: #6e56f4;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.imageCounter {
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	background: rgba(0, 0, 0, 0.75);
+	color: white;
+	padding: 0.5rem 1rem;
+	border-radius: 20px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.actionButtons {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+	margin-top: 2rem;
+}
+
+.rejectBtn,
+.approveBtn {
+	padding: 0.875rem 2.5rem;
+	border: 2px solid transparent;
+	border-radius: 12px;
+	font-size: 16px;
+	font-weight: 700;
+	cursor: pointer;
+	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+	min-width: 150px;
+	position: relative;
+	overflow: hidden;
+}
+
+.rejectBtn::before,
+.approveBtn::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgba(255, 255, 255, 0.1);
+	opacity: 0;
+	transition: opacity 0.25s ease;
+}
+
+.rejectBtn:hover::before,
+.approveBtn:hover::before {
+	opacity: 1;
+}
+
+.rejectBtn {
+	background: linear-gradient(135deg, #ef5350 0%, #d32f2f 100%);
+	color: white;
+	box-shadow: 0 4px 15px rgba(239, 83, 80, 0.3);
+}
+
+.rejectBtn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 25px rgba(239, 83, 80, 0.5);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.approveBtn {
+	background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+	color: white;
+	box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
+}
+
+.approveBtn:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 25px rgba(102, 187, 106, 0.5);
+	border-color: rgba(255, 255, 255, 0.2);
+}
+
+.rejectBtn:active,
+.approveBtn:active {
+	transform: translateY(0);
+	transition: all 0.1s ease;
+}
+
+/* Scrollbar Styling */
+.modalContent::-webkit-scrollbar {
+	width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+	background: #1a1d29;
+	border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+	background: #6e56f4;
+	border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+	background: #8b7af7;
+}
+
+@media (max-width: 768px) {
+	.modalBackdrop {
+		padding: 1rem;
+	}
+
+	.modalContent {
+		padding: 2rem 1.5rem;
+		max-height: 95vh;
+	}
+
+	.modalTitle {
+		font-size: 22px;
+		margin-bottom: 1.5rem;
+	}
+
+	.detailsGrid {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+
+	.imageCarousel {
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.carouselBtn {
+		width: 40px;
+		height: 40px;
+	}
+
+	.prevBtn,
+	.nextBtn {
+		order: 2;
+	}
+
+	.imageContainer {
+		order: 1;
+		max-width: 100%;
+	}
+
+	.actionButtons {
+		flex-direction: column;
+	}
+
+	.rejectBtn,
+	.approveBtn {
+		width: 100%;
+	}
+}
+
+/* Image Viewer Lightbox */
+.imageViewerBackdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.95);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 2000;
+	padding: 2rem;
+	animation: fadeIn 0.2s ease-out;
+	cursor: zoom-out;
+}
+
+.imageViewerClose {
+	position: absolute;
+	top: 2rem;
+	right: 2rem;
+	background: rgba(255, 255, 255, 0.1);
+	backdrop-filter: blur(10px);
+	border: 2px solid rgba(255, 255, 255, 0.2);
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	z-index: 2001;
+}
+
+.imageViewerClose:hover {
+	background: rgba(255, 255, 255, 0.2);
+	transform: rotate(90deg);
+	border-color: rgba(255, 255, 255, 0.4);
+}
+
+.imageViewerImage {
+	max-width: 95%;
+	max-height: 95vh;
+	object-fit: contain;
+	border-radius: 8px;
+	box-shadow: 0 25px 100px rgba(0, 0, 0, 0.8);
+	animation: zoomIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+	cursor: default;
+}
+
+@keyframes zoomIn {
+	from {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@media (max-width: 768px) {
+	.imageViewerClose {
+		top: 1rem;
+		right: 1rem;
+		width: 44px;
+		height: 44px;
+	}
+
+	.imageViewerImage {
+		max-width: 100%;
+		max-height: 90vh;
+	}
+}

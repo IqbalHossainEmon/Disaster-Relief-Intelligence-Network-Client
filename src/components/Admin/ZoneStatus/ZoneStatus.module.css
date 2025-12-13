@@ -1,0 +1,32 @@
+.zoneStatus {
+	width: 100%;
+}
+
+.pageTitle {
+	font-size: 32px;
+	font-weight: 700;
+	color: #f5f6fa;
+	margin: 0 0 2rem 0;
+}
+
+.placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 400px;
+	background: #23263a;
+	border-radius: 12px;
+	color: #8b92b0;
+	gap: 1.5rem;
+}
+
+.placeholder svg {
+	opacity: 0.5;
+}
+
+.placeholder p {
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0;
+}
