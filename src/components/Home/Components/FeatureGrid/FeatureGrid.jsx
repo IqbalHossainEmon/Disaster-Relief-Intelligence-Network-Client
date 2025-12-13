@@ -1,4 +1,4 @@
-import Styles from './FeatureGrid.module.css';
+import styles from './FeatureGrid.module.css';
 
 const features = [
 	{
@@ -25,27 +25,27 @@ const features = [
 
 function FeatureCard({ title, copy, icon }) {
 	return (
-		<article className={Styles.card}>
-			<div className={Styles.icon} aria-hidden>
+		<article className={styles.card}>
+			<div className={styles.icon} aria-hidden>
 				<span>{icon}</span>
 			</div>
-			<h3 className={Styles.cardTitle}>{title}</h3>
-			<p className={Styles.cardCopy}>{copy}</p>
+			<h3 className={styles.cardTitle}>{title}</h3>
+			<p className={styles.cardCopy}>{copy}</p>
 		</article>
 	);
 }
 
 function FeatureGrid() {
 	return (
-		<section className={Styles.featureGrid} id='features'>
-			<div className={Styles.header}>
-				<h2 className={Styles.headerTitle}>Solving the Toughest Challenges in Relief Logistics</h2>
-				<p className={Styles.headerDescription}>
+		<section className={styles.featureGrid} id='features'>
+			<div className={styles.header}>
+				<h2 className={styles.headerTitle}>Solving the Toughest Challenges in Relief Logistics</h2>
+				<p className={styles.headerDescription}>
 					Disaster relief is complex. Our AI platform simplifies resource allocation, team coordination, and needs
 					assessment, ensuring aid reaches where it&apos;s needed most, faster.
 				</p>
 			</div>
-			<div className={Styles.items}>
+			<div className={styles.items}>
 				{features.map(feature => (
 					<FeatureCard key={feature.title} {...feature} />
 				))}

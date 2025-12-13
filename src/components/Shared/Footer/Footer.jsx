@@ -5,7 +5,7 @@ function Footer() {
 		<footer className={styles.footer}>
 			<div className={styles.footerInner}>
 				<div className={styles.footerBrand}>
-					<span className={styles.brandLogo}>AIPDRRP</span>
+					<span className={styles.brandLogo}>DRIN</span>
 				</div>
 				<div className={styles.footerColumns}>
 					<div className={styles.footerCol}>

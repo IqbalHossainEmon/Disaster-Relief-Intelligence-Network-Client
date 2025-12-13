@@ -1,12 +1,12 @@
-import Styles from './Navbar.module.css';
+import styles from './Navbar.module.css';
 
 function Navbar() {
 	return (
-		<header className={Styles.navbar}>
-			<div className={Styles.inner}>
-				<div className={Styles.brand}>AIPDRRP</div>
-				<div className={Styles.actions}>
-					<button className={`${Styles.btn} ${Styles.btnPrimary}`}>Sign up</button>
+		<header className={styles.navbar}>
+			<div className={styles.inner}>
+				<div className={styles.brand}>DRIN</div>
+				<div className={styles.actions}>
+					<button className={`${styles.btn} ${styles.btnPrimary}`}>Sign up</button>
 				</div>
 			</div>
 		</header>

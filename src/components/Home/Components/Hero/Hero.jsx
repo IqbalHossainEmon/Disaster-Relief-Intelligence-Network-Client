@@ -1,17 +1,16 @@
-import Styles from './Hero.module.css';
+import styles from './Hero.module.css';
 
 function Hero() {
 	return (
-		<section className={Styles.hero} id='overview'>
-			<div className={Styles.overlay} />
-			<div className={Styles.background} aria-hidden />
-			<div className={Styles.inner}>
-				<div className={Styles.content}>
-					<p className={Styles.eyebrow}>AI-Powered Resource Planning for Disaster Relief.</p>
-					<h1 className={Styles.title}>Navigate Chaos with Intelligence</h1>
-					<p className={Styles.subtitle}>AI-Powered Resource Planning for Disaster Relief.</p>
-					<div className={Styles.actions}>
-						<button className={`${Styles.btn} ${Styles.btnPrimary}`}>Sign up</button>
+		<section className={styles.hero} id='overview'>
+			<div className={styles.background} aria-hidden />
+			<div className={styles.inner}>
+				<div className={styles.content}>
+					<p className={styles.eyebrow}>AI-Powered Resource Planning for Disaster Relief.</p>
+					<h1 className={styles.title}>Navigate Chaos with Intelligence</h1>
+					<p className={styles.subtitle}>AI-Powered Resource Planning for Disaster Relief.</p>
+					<div className={styles.actions}>
+						<button className={`${styles.btn} ${styles.btnPrimary}`}>Sign up</button>
 					</div>
 				</div>
 			</div>
