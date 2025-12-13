@@ -1,0 +1,100 @@
+.hero {
+	position: relative;
+	min-height: 70vh;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	width: 100%;
+}
+
+.background {
+	position: absolute;
+	inset: 0;
+	background: url('/landing page.svg') center/cover no-repeat;
+	filter: brightness(0.6);
+}
+
+.overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.inner {
+	position: relative;
+	width: 100%;
+	max-width: 1600px;
+	margin: 0 auto;
+	display: grid;
+	place-items: center;
+	padding: 0 32px;
+}
+
+.content {
+	position: relative;
+	text-align: center;
+	max-width: 780px;
+	padding: 32px 16px;
+	display: grid;
+	gap: 14px;
+}
+
+.eyebrow {
+	margin: 0;
+	font-size: 16px;
+	color: #f5f6fa;
+	font-family: 'Caveat', cursive;
+	letter-spacing: 0.02em;
+}
+
+.title {
+	margin: 0;
+	font-family: 'Playfair Display', serif;
+	font-size: 44px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.subtitle {
+	margin: 0;
+	font-size: 16px;
+	font-style: italic;
+	color: #f5f6fa;
+}
+
+.actions {
+	display: flex;
+	justify-content: center;
+}
+
+.btn {
+	border: none;
+	border-radius: 999px;
+	padding: 12px 28px;
+	background: var(--surface);
+	color: #f5f6fa;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: 600;
+	transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btnPrimary {
+	background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+	color: #f8f7ff;
+}
+
+.btn:hover {
+	transform: translateY(-1px);
+	box-shadow: var(--shadow);
+}
+
+@media (max-width: 720px) {
+	.inner {
+		padding: 0 18px;
+	}
+
+	.title {
+		font-size: 34px;
+	}
+}

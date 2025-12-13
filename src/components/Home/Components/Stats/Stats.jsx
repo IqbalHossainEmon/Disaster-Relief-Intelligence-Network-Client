@@ -1,4 +1,5 @@
-import SectionHeader from './SectionHeader';
+import SectionHeader from '../SectionHeader/SectionHeader';
+import Styles from './Stats.module.css';
 
 const statItems = [
 	{
@@ -25,23 +26,23 @@ const statItems = [
 
 function StatCard({ label, value, detail }) {
 	return (
-		<div className='glass card stat-card'>
-			<span className='stat-card__label'>{label}</span>
-			<span className='stat-card__value'>{value}</span>
-			<span className='stat-card__detail'>{detail}</span>
+		<div className={Styles.statCard}>
+			<span className={Styles.statLabel}>{label}</span>
+			<span className={Styles.statValue}>{value}</span>
+			<span className={Styles.statDetail}>{detail}</span>
 		</div>
 	);
 }
 
 function Stats() {
 	return (
-		<section className='section stats'>
+		<section className={`${Styles.section} ${Styles.stats}`}>
 			<SectionHeader
 				eyebrow='Operational pulse'
 				title='Live telemetry and readiness'
 				description='Always-on metrics so dispatchers see exactly what is moving, where, and how fast.'
 			/>
-			<div className='stat-grid'>
+			<div className={Styles.statGrid}>
 				{statItems.map(item => (
 					<StatCard key={item.label} {...item} />
 				))}

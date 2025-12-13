@@ -1,3 +1,5 @@
+import Styles from './FeatureGrid.module.css';
+
 const features = [
 	{
 		title: 'Predictive Needs Analysis',
@@ -23,27 +25,27 @@ const features = [
 
 function FeatureCard({ title, copy, icon }) {
 	return (
-		<article className='card feature-card'>
-			<div className='feature-icon' aria-hidden>
+		<article className={Styles.card}>
+			<div className={Styles.icon} aria-hidden>
 				<span>{icon}</span>
 			</div>
-			<h3>{title}</h3>
-			<p>{copy}</p>
+			<h3 className={Styles.cardTitle}>{title}</h3>
+			<p className={Styles.cardCopy}>{copy}</p>
 		</article>
 	);
 }
 
 function FeatureGrid() {
 	return (
-		<section className='section feature-grid' id='features'>
-			<div className='section-header section-header--center'>
-				<h2>Solving the Toughest Challenges in Relief Logistics</h2>
-				<p>
+		<section className={Styles.featureGrid} id='features'>
+			<div className={Styles.header}>
+				<h2 className={Styles.headerTitle}>Solving the Toughest Challenges in Relief Logistics</h2>
+				<p className={Styles.headerDescription}>
 					Disaster relief is complex. Our AI platform simplifies resource allocation, team coordination, and needs
 					assessment, ensuring aid reaches where it&apos;s needed most, faster.
 				</p>
 			</div>
-			<div className='feature-grid__items'>
+			<div className={Styles.items}>
 				{features.map(feature => (
 					<FeatureCard key={feature.title} {...feature} />
 				))}

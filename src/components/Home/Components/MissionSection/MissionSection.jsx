@@ -1,4 +1,4 @@
-import SectionHeader from './SectionHeader';
+import SectionHeader from '../SectionHeader/SectionHeader';
 
 const phases = [
 	{ title: 'Detect', detail: 'Satellite, drone, and citizen channels fused into a single alert stream.' },

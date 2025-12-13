@@ -1,19 +1,16 @@
-import './App.css';
-import CTASection from './components/CTASection';
-import FeatureGrid from './components/FeatureGrid';
-import Footer from './components/Footer';
-import Hero from './components/Hero';
-import Navbar from './components/Navbar';
+import styles from './App.module.css';
+import CTASection from './components/Home/Components/CTASection/CTASection';
+import FeatureGrid from './components/Home/Components/FeatureGrid/FeatureGrid';
+import Footer from './components/Shared/Footer/Footer';
+import Hero from './components/Home/Components/Hero/Hero';
+import Navbar from './components/Shared/Navbar/Navbar';
+import Home from './components/Home/Home/Home';
 
 function App() {
 	return (
-		<div className='page'>
+		<div className={styles.page}>
 			<Navbar />
-			<main className='main'>
-				<Hero />
-				<FeatureGrid />
-				<CTASection />
-			</main>
+			<Home />
 			<Footer />
 		</div>
 	);
