@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import RequestDetailsModal from '../RequestDetailsModal/RequestDetailsModal';
+import RequestDetailsModal from '../../RequestDetailsModal/RequestDetailsModal/RequestDetailsModal';
 import styles from './AssignmentRequests.module.css';
 
 function AssignmentRequests() {

@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../Sidebar/Sidebar';
+import Sidebar from '../../Sidebar/Sidebar/Sidebar';
 import styles from './AdminDashboard.module.css';
 
 function AdminDashboard() {
