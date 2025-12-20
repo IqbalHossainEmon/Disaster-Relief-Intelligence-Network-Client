@@ -9,19 +9,24 @@ import UserManagement from './components/Admin/UserManagement/UserManagement/Use
 import ZoneStatus from './components/Admin/ZoneStatus/ZoneStatus/ZoneStatus';
 import Login from './components/Auth/Login/Login/Login';
 import SignUp from './components/Auth/SignUp/SignUp/SignUp';
+import DisasterMap from './components/DisasterMap/DisasterMap/DisasterMap';
+import ZoneDetails from './components/ZoneDetails/ZoneDetails/ZoneDetails';
 
 function App() {
 	const location = useLocation();
 	const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 	const isAdminPage = location.pathname.startsWith('/admin');
+	const isDisasterMapPage = location.pathname.startsWith('/disaster-map') || location.pathname.startsWith('/zone');
 
 	return (
 		<div className={styles.page}>
-			{!isAdminPage && <Navbar />}
+			{!isAdminPage && !isDisasterMapPage && <Navbar />}
 			<Routes>
 				<Route path='/' element={<Home />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/signup' element={<SignUp />} />
+				<Route path='/disaster-map' element={<DisasterMap />} />
+				<Route path='/zone/:zoneId' element={<ZoneDetails />} />
 				<Route path='/admin' element={<AdminDashboard />}>
 					<Route index element={<Navigate to='/admin/assignment-requests' replace />} />
 					<Route path='assignment-requests' element={<AssignmentRequests />} />
@@ -29,7 +34,7 @@ function App() {
 					<Route path='zone-status' element={<ZoneStatus />} />
 				</Route>
 			</Routes>
-			{!isAuthPage && !isAdminPage && <Footer />}
+			{!isAuthPage && !isAdminPage && !isDisasterMapPage && <Footer />}
 		</div>
 	);
 }
