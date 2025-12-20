@@ -1,0 +1,212 @@
+.tabContent {
+	animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Zone Summary Styles */
+.infoGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 1.5rem;
+}
+
+.infoCard {
+	background: #353535;
+	padding: 1.5rem;
+	border-radius: 8px;
+	border: 1px solid #3a3a3a;
+}
+
+.infoLabel {
+	font-size: 0.85rem;
+	color: #aaa;
+	margin-bottom: 0.5rem;
+}
+
+.infoValue {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #fff;
+}
+
+.infoValue.critical {
+	color: #ff4444;
+	font-weight: bold;
+}
+
+/* Ongoing Efforts Styles */
+.effortsList {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.effortItem {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background: #353535;
+	padding: 1.25rem;
+	border-radius: 8px;
+	border: 1px solid #3a3a3a;
+}
+
+.effortIcon {
+	font-size: 2rem;
+}
+
+.effortInfo {
+	flex: 1;
+}
+
+.effortLabel {
+	font-size: 0.9rem;
+	color: #aaa;
+	margin-bottom: 0.25rem;
+}
+
+.effortValue {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #4a90e2;
+}
+
+/* Challenges & Alerts Styles */
+.alertsList {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.alertItem {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background: #353535;
+	padding: 1.25rem;
+	border-radius: 8px;
+	border: 1px solid #ff8c42;
+}
+
+.alertIcon {
+	font-size: 2rem;
+}
+
+.alertInfo {
+	flex: 1;
+}
+
+.alertLabel {
+	font-size: 0.9rem;
+	color: #aaa;
+	margin-bottom: 0.25rem;
+}
+
+.alertValue {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #ff8c42;
+}
+
+/* Assigned Teams Styles */
+.teamsList {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.teamCard {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: #353535;
+	padding: 1.25rem;
+	border-radius: 8px;
+	border: 1px solid #3a3a3a;
+}
+
+.teamHeader {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.teamIcon {
+	font-size: 2rem;
+}
+
+.teamInfo {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.teamName {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #fff;
+}
+
+.teamMembers {
+	font-size: 0.85rem;
+	color: #aaa;
+}
+
+.teamStatus {
+	padding: 0.5rem 1rem;
+	border-radius: 20px;
+	font-size: 0.85rem;
+	font-weight: 600;
+}
+
+.teamStatus.active {
+	background: rgba(74, 144, 226, 0.2);
+	color: #4a90e2;
+	border: 1px solid #4a90e2;
+}
+
+.teamStatus.pendingapproval {
+	background: rgba(255, 140, 66, 0.2);
+	color: #ff8c42;
+	border: 1px solid #ff8c42;
+}
+
+.seeMoreBtn {
+	margin-top: 0.5rem;
+	padding: 0.75rem;
+	background: transparent;
+	color: #4a90e2;
+	border: 1px solid #4a90e2;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	font-weight: 600;
+	transition: all 0.2s;
+}
+
+.seeMoreBtn:hover {
+	background: #4a90e2;
+	color: white;
+}
+
+@media (max-width: 768px) {
+	.infoGrid {
+		grid-template-columns: 1fr;
+	}
+
+	.teamCard {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+}
