@@ -1,0 +1,47 @@
+.formGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	flex: 1;
+}
+
+.formRow {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+.label {
+	font-size: 14px;
+	font-weight: 600;
+	color: #f5f6fa;
+}
+
+.input {
+	width: 100%;
+	padding: 12px 16px;
+	background: var(--card);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	color: #f5f6fa;
+	font-size: 15px;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+}
+
+.input::placeholder {
+	color: var(--muted);
+	opacity: 0.6;
+}
+
+.input:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px rgba(110, 86, 244, 0.1);
+}
+
+@media (max-width: 640px) {
+	.formRow {
+		grid-template-columns: 1fr;
+	}
+}
