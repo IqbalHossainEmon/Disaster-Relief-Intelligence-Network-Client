@@ -17,10 +17,11 @@ function App() {
 	const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 	const isAdminPage = location.pathname.startsWith('/admin');
 	const isDisasterMapPage = location.pathname.startsWith('/disaster-map') || location.pathname.startsWith('/zone');
+	const showFooter = !isAuthPage && !isAdminPage && !isDisasterMapPage;
 
 	return (
 		<div className={styles.page}>
-			{!isAdminPage && !isDisasterMapPage && <Navbar />}
+			{!isAuthPage && <Navbar />}
 			<Routes>
 				<Route path='/' element={<Home />} />
 				<Route path='/login' element={<Login />} />
@@ -34,7 +35,7 @@ function App() {
 					<Route path='zone-status' element={<ZoneStatus />} />
 				</Route>
 			</Routes>
-			{!isAuthPage && !isAdminPage && !isDisasterMapPage && <Footer />}
+			{showFooter && <Footer />}
 		</div>
 	);
 }

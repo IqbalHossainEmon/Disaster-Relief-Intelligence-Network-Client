@@ -1,102 +1,80 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RequestDetailsModal from '../../RequestDetailsModal/RequestDetailsModal/RequestDetailsModal';
+import { assignmentService } from '../../../../services';
 import styles from './AssignmentRequests.module.css';
 
 function AssignmentRequests() {
 	const [selectedRequest, setSelectedRequest] = useState(null);
+	const [pendingRequests, setPendingRequests] = useState([]);
+	const [approvedRequests, setApprovedRequests] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
 
-	// Mock data - replace with API call
-	const pendingRequests = [
-		{
-			id: 1,
-			groupLeader: 'Md. Asif Rahman',
-			teamName: 'Feni Rescue Team',
-			zoneRequested: 'Zone-5',
-			submissionDate: '2025-05-10',
-			teamMembers: [
-				{ name: 'Nurul Amin', role: 'Relief Coordinator' },
-				{ name: 'Jamal Uddin', role: 'Logistics Lead' },
-				{ name: 'Imran Hossain', role: 'Medical Assistant' },
-				{ name: 'Sakib Mahmud', role: 'Communication Officer' },
-			],
-			evidences: [
-				'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop',
-				'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800&h=600&fit=crop',
-				'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop',
-			],
-		},
-		{
-			id: 2,
-			groupLeader: 'Farhan Chowdhury',
-			teamName: 'Youth Supporters',
-			zoneRequested: 'Zone-8',
-			submissionDate: '2025-05-09',
-			teamMembers: [
-				{ name: 'Rashid Ahmed', role: 'Team Lead' },
-				{ name: 'Nadia Islam', role: 'Medical Officer' },
-				{ name: 'Karim Hossain', role: 'Supply Manager' },
-			],
-			evidences: ['https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop'],
-		},
-		{
-			id: 3,
-			groupLeader: 'Salman Rahman',
-			teamName: 'Unity Responders',
-			zoneRequested: 'Zone-2',
-			submissionDate: '2025-05-11',
-			teamMembers: [
-				{ name: 'Fahim Rahman', role: 'Operations Lead' },
-				{ name: 'Sabrina Akhter', role: 'Health Coordinator' },
-			],
-			evidences: [
-				'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=800&h=600&fit=crop',
-				'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800&h=600&fit=crop',
-			],
-		},
-		{
-			id: 4,
-			groupLeader: 'Mahfuz Ahmed',
-			teamName: 'Delta Force',
-			zoneRequested: 'Zone-1',
-			submissionDate: '2025-05-07',
-			teamMembers: [
-				{ name: 'Tanvir Ahmed', role: 'Field Commander' },
-				{ name: 'Zara Khan', role: 'Resource Manager' },
-				{ name: 'Arif Hasan', role: 'Communications' },
-			],
-			evidences: ['https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&h=600&fit=crop'],
-		},
-	];
+	// Fetch assignment requests on component mount
+	useEffect(() => {
+		fetchRequests();
+	}, []);
 
-	const approvedRequests = [
-		{
-			id: 5,
-			groupLeader: 'Tanvir Hossain',
-			teamName: 'RapidRelief BD',
-			zoneRequested: 'Zone-1',
-			approvalDate: '2025-05-08',
-		},
-	];
+	const fetchRequests = async () => {
+		try {
+			setLoading(true);
+			setError('');
 
-	const handleShowDetails = request => {
-		setSelectedRequest(request);
+			// Fetch pending and approved requests in parallel
+			const [pendingResponse, approvedResponse] = await Promise.all([
+				assignmentService.getRequests({ status: 'pending' }),
+				assignmentService.getRequests({ status: 'approved' }),
+			]);
+
+			setPendingRequests(pendingResponse.requests || []);
+			setApprovedRequests(approvedResponse.requests || []);
+		} catch (err) {
+			console.error('Error fetching requests:', err);
+			setError('Failed to load assignment requests');
+		} finally {
+			setLoading(false);
+		}
 	};
 
-	const handleCloseModal = () => {
-		setSelectedRequest(null);
+	const handleApprove = async (requestId, notes) => {
+		try {
+			await assignmentService.approveRequest(requestId, notes);
+			// Refresh the requests list
+			await fetchRequests();
+			setSelectedRequest(null);
+		} catch (err) {
+			console.error('Error approving request:', err);
+			alert('Failed to approve request: ' + (err.message || 'Unknown error'));
+		}
 	};
 
-	const handleApprove = requestId => {
-		console.log('Approved:', requestId);
-		// Add API call here
-		handleCloseModal();
+	const handleReject = async (requestId, reason) => {
+		try {
+			await assignmentService.rejectRequest(requestId, reason);
+			// Refresh the requests list
+			await fetchRequests();
+			setSelectedRequest(null);
+		} catch (err) {
+			console.error('Error rejecting request:', err);
+			alert('Failed to reject request: ' + (err.message || 'Unknown error'));
+		}
 	};
 
-	const handleReject = requestId => {
-		console.log('Rejected:', requestId);
-		// Add API call here
-		handleCloseModal();
-	};
+	if (loading) {
+		return (
+			<div className={styles.assignmentRequests}>
+				<div className={styles.loading}>Loading assignment requests...</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className={styles.assignmentRequests}>
+				<div className={styles.error}>{error}</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className={styles.assignmentRequests}>
@@ -104,61 +82,73 @@ function AssignmentRequests() {
 
 			{/* Pending Section */}
 			<section className={styles.section}>
-				<h3 className={styles.sectionTitle}>Pending</h3>
+				<h3 className={styles.sectionTitle}>Pending ({pendingRequests.length})</h3>
 				<div className={styles.tableWrapper}>
-					<table className={styles.table}>
-						<thead>
-							<tr>
-								<th>Group Leader</th>
-								<th>Team Name</th>
-								<th>Zone Requested</th>
-								<th>Submission Date</th>
-								<th>Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{pendingRequests.map(request => (
-								<tr key={request.id}>
-									<td>{request.groupLeader}</td>
-									<td>{request.teamName}</td>
-									<td>{request.zoneRequested}</td>
-									<td>{request.submissionDate}</td>
-									<td>
-										<button className={styles.detailsBtn} onClick={() => handleShowDetails(request)}>
-											Show Details
-										</button>
-									</td>
+					{pendingRequests.length === 0 ? (
+						<div className={styles.emptyState}>No pending requests</div>
+					) : (
+						<table className={styles.table}>
+							<thead>
+								<tr>
+									<th>Group Leader</th>
+									<th>Team Name</th>
+									<th>Zone Requested</th>
+									<th>Submission Date</th>
+									<th>Actions</th>
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{pendingRequests.map(request => (
+									<tr key={request.id}>
+										<td>{request.requestedBy?.fullName || request.requestedBy?.full_name || 'N/A'}</td>
+										<td>{request.organization?.name || 'N/A'}</td>
+										<td>{request.zone?.name || request.zoneId}</td>
+										<td>
+											{new Date(request.createdAt || request.created_at || request.submissionDate).toLocaleDateString()}
+										</td>
+										<td>
+											<button className={styles.detailsBtn} onClick={() => setSelectedRequest(request)}>
+												Show Details
+											</button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					)}
 				</div>
 			</section>
 
 			{/* Approved Section */}
 			<section className={styles.section}>
-				<h3 className={styles.sectionTitle}>Approved</h3>
+				<h3 className={styles.sectionTitle}>Approved ({approvedRequests.length})</h3>
 				<div className={styles.tableWrapper}>
-					<table className={styles.table}>
-						<thead>
-							<tr>
-								<th>Group Leader</th>
-								<th>Team Name</th>
-								<th>Zone Requested</th>
-								<th>Group Leader</th>
-							</tr>
-						</thead>
-						<tbody>
-							{approvedRequests.map(request => (
-								<tr key={request.id}>
-									<td>{request.groupLeader}</td>
-									<td>{request.teamName}</td>
-									<td>{request.zoneRequested}</td>
-									<td>{request.approvalDate}</td>
+					{approvedRequests.length === 0 ? (
+						<div className={styles.emptyState}>No approved requests</div>
+					) : (
+						<table className={styles.table}>
+							<thead>
+								<tr>
+									<th>Group Leader</th>
+									<th>Team Name</th>
+									<th>Zone Requested</th>
+									<th>Approval Date</th>
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{approvedRequests.map(request => (
+									<tr key={request.id}>
+										<td>{request.requestedBy?.fullName || request.requestedBy?.full_name || 'N/A'}</td>
+										<td>{request.organization?.name || 'N/A'}</td>
+										<td>{request.zone?.name || request.zoneId}</td>
+										<td>
+											{new Date(request.approvedAt || request.approved_at || request.approvalDate).toLocaleDateString()}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					)}
 				</div>
 			</section>
 
@@ -166,7 +156,7 @@ function AssignmentRequests() {
 			{selectedRequest && (
 				<RequestDetailsModal
 					request={selectedRequest}
-					onClose={handleCloseModal}
+					onClose={() => setSelectedRequest(null)}
 					onApprove={handleApprove}
 					onReject={handleReject}
 				/>

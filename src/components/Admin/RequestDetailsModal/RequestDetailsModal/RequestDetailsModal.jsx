@@ -65,34 +65,41 @@ function RequestDetailsModal({ request, onClose, onApprove, onReject }) {
 					<div className={styles.leftColumn}>
 						<div className={styles.infoGroup}>
 							<p className={styles.infoLabel}>Group Leader Name:</p>
-							<p className={styles.infoValue}>{request.groupLeader}</p>
+							<p className={styles.infoValue}>
+								{request.requestedBy?.fullName || request.requestedBy?.full_name || request.groupLeader || 'N/A'}
+							</p>
 						</div>
 
 						<div className={styles.infoGroup}>
 							<p className={styles.infoLabel}>Team Name:</p>
-							<p className={styles.infoValue}>{request.teamName}</p>
+							<p className={styles.infoValue}>{request.organization?.name || request.teamName || 'N/A'}</p>
 						</div>
 
 						<div className={styles.infoGroup}>
 							<p className={styles.infoLabel}>Zone Requested:</p>
-							<p className={styles.infoValue}>{request.zoneRequested}</p>
+							<p className={styles.infoValue}>{request.zone?.name || request.zoneRequested || 'N/A'}</p>
 						</div>
 
 						<div className={styles.infoGroup}>
 							<p className={styles.infoLabel}>Submission Date:</p>
-							<p className={styles.infoValue}>{request.submissionDate}</p>
+							<p className={styles.infoValue}>
+								{new Date(request.createdAt || request.created_at || request.submissionDate).toLocaleDateString()}
+							</p>
 						</div>
 					</div>
 
 					<div className={styles.rightColumn}>
 						<h3 className={styles.teamMembersTitle}>Team Members</h3>
 						<ol className={styles.teamMembersList}>
-							{request.teamMembers.map((member, index) => (
+							{(request.teamMembers || request.members || []).map((member, index) => (
 								<li key={index} className={styles.teamMember}>
-									{member.name} — {member.role}
+									{member.name || member.fullName || member.full_name || 'N/A'} — {member.role || 'Team Member'}
 								</li>
 							))}
 						</ol>
+						{(!request.teamMembers || request.teamMembers.length === 0) && (
+							<p className={styles.noMembers}>No team members listed</p>
+						)}
 					</div>
 				</div>
 
@@ -100,60 +107,64 @@ function RequestDetailsModal({ request, onClose, onApprove, onReject }) {
 				<div className={styles.evidenceSection}>
 					<h3 className={styles.evidenceTitle}>Evidences</h3>
 
-					<div className={styles.imageCarousel}>
-						<button
-							className={`${styles.carouselBtn} ${styles.prevBtn}`}
-							onClick={handlePrevImage}
-							disabled={request.evidences.length <= 1}
-						>
-							<svg width='32' height='32' viewBox='0 0 24 24' fill='none'>
-								<path
-									d='M15 18l-6-6 6-6'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-							</svg>
-						</button>
+					{request.evidences && request.evidences.length > 0 ? (
+						<div className={styles.imageCarousel}>
+							<button
+								className={`${styles.carouselBtn} ${styles.prevBtn}`}
+								onClick={handlePrevImage}
+								disabled={request.evidences.length <= 1}
+							>
+								<svg width='32' height='32' viewBox='0 0 24 24' fill='none'>
+									<path
+										d='M15 18l-6-6 6-6'
+										stroke='currentColor'
+										strokeWidth='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+									/>
+								</svg>
+							</button>
 
-						<div className={styles.imageContainer}>
-							{isImageLoading && (
-								<div className={styles.imageLoader}>
-									<div className={styles.spinner}></div>
-								</div>
-							)}
-							<img
-								src={request.evidences[currentImageIndex]}
-								alt={`Evidence ${currentImageIndex + 1}`}
-								className={styles.evidenceImage}
-								onClick={() => setIsImageViewerOpen(true)}
-								onLoad={() => setIsImageLoading(false)}
-								style={{ cursor: 'pointer', opacity: isImageLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
-							/>
-							{request.evidences.length > 1 && (
-								<div className={styles.imageCounter}>
-									{currentImageIndex + 1} / {request.evidences.length}
-								</div>
-							)}
+							<div className={styles.imageContainer}>
+								{isImageLoading && (
+									<div className={styles.imageLoader}>
+										<div className={styles.spinner}></div>
+									</div>
+								)}
+								<img
+									src={request.evidences[currentImageIndex]}
+									alt={`Evidence ${currentImageIndex + 1}`}
+									className={styles.evidenceImage}
+									onClick={() => setIsImageViewerOpen(true)}
+									onLoad={() => setIsImageLoading(false)}
+									style={{ cursor: 'pointer', opacity: isImageLoading ? 0 : 1, transition: 'opacity 0.3s ease' }}
+								/>
+								{request.evidences.length > 1 && (
+									<div className={styles.imageCounter}>
+										{currentImageIndex + 1} / {request.evidences.length}
+									</div>
+								)}
+							</div>
+
+							<button
+								className={`${styles.carouselBtn} ${styles.nextBtn}`}
+								onClick={handleNextImage}
+								disabled={request.evidences.length <= 1}
+							>
+								<svg width='32' height='32' viewBox='0 0 24 24' fill='none'>
+									<path
+										d='M9 18l6-6-6-6'
+										stroke='currentColor'
+										strokeWidth='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+									/>
+								</svg>
+							</button>
 						</div>
-
-						<button
-							className={`${styles.carouselBtn} ${styles.nextBtn}`}
-							onClick={handleNextImage}
-							disabled={request.evidences.length <= 1}
-						>
-							<svg width='32' height='32' viewBox='0 0 24 24' fill='none'>
-								<path
-									d='M9 18l6-6-6-6'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-							</svg>
-						</button>
-					</div>
+					) : (
+						<p className={styles.noEvidence}>No evidence files uploaded</p>
+					)}
 				</div>
 
 				{/* Action Buttons */}
@@ -161,8 +172,11 @@ function RequestDetailsModal({ request, onClose, onApprove, onReject }) {
 					<button
 						className={styles.rejectBtn}
 						onClick={() => {
-							setIsClosing(true);
-							setTimeout(() => onReject(request.id), 300);
+							const reason = prompt('Please provide a reason for rejection:');
+							if (reason) {
+								setIsClosing(true);
+								setTimeout(() => onReject(request._id || request.id, reason), 300);
+							}
 						}}
 					>
 						Reject
@@ -171,7 +185,7 @@ function RequestDetailsModal({ request, onClose, onApprove, onReject }) {
 						className={styles.approveBtn}
 						onClick={() => {
 							setIsClosing(true);
-							setTimeout(() => onApprove(request.id), 300);
+							setTimeout(() => onApprove(request._id || request.id), 300);
 						}}
 					>
 						Approve

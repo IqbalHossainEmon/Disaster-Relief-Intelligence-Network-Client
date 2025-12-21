@@ -113,3 +113,20 @@
 		font-size: 13px;
 	}
 }
+
+.loading,
+.error,
+.emptyState {
+	padding: 3rem 2rem;
+	text-align: center;
+	color: #8b92b0;
+	font-size: 16px;
+}
+
+.error {
+	color: #ef4444;
+}
+
+.loading {
+	color: #6e56f4;
+}

@@ -9,8 +9,14 @@ const MapController = ({ zones, selectedZone }) => {
 
 	useEffect(() => {
 		if (selectedZone) {
-			// Zoom to selected zone
-			map.setView(selectedZone.coordinates, 13, {
+			// Zoom to selected zone - handle both array and object formats
+			const coords = Array.isArray(selectedZone.coordinates)
+				? selectedZone.coordinates
+				: selectedZone.coordinates?.latitude && selectedZone.coordinates?.longitude
+				? [selectedZone.coordinates.latitude, selectedZone.coordinates.longitude]
+				: [23.0239, 91.3996];
+
+			map.setView(coords, 13, {
 				animate: true,
 				duration: 1,
 			});
@@ -27,6 +33,8 @@ const MapController = ({ zones, selectedZone }) => {
 };
 
 const MapView = ({ zones, onZoneClick, selectedZone }) => {
+	console.log('MapView received zones:', zones, 'Length:', zones?.length);
+
 	const getSeverityColor = severity => {
 		switch (severity) {
 			case 'critical':
@@ -62,17 +70,17 @@ const MapView = ({ zones, onZoneClick, selectedZone }) => {
 	return (
 		<div className={styles.mapWrapper}>
 			<MapContainer
-				center={[23.0239, 91.3996]}
-				zoom={10}
-				minZoom={8}
+				center={[23.5, 90.5]}
+				zoom={7}
+				minZoom={6}
 				maxZoom={15}
 				className={styles.map}
 				zoomControl={true}
 				maxBounds={[
-					[21.5, 89.5],
-					[24.5, 93.5],
+					[20.5, 88.0],
+					[26.5, 93.0],
 				]}
-				maxBoundsViscosity={0.8}
+				maxBoundsViscosity={0.5}
 			>
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -80,40 +88,62 @@ const MapView = ({ zones, onZoneClick, selectedZone }) => {
 				/>
 				<MapController zones={zones} selectedZone={selectedZone} />
 
-				{zones.map(zone => (
-					<Circle
-						key={zone.id}
-						center={zone.coordinates}
-						radius={zone.radius}
-						pathOptions={{
-							color: getSeverityColor(zone.severity),
-							fillColor: getSeverityColor(zone.severity),
-							fillOpacity: getSeverityOpacity(zone.severity),
-							weight: 2,
-						}}
-						eventHandlers={{
-							click: () => onZoneClick(zone),
-						}}
-					>
-						<Tooltip direction='top' offset={[0, -10]} opacity={0.9}>
-							<div className={styles.tooltip}>
-								<strong>{zone.name}</strong> - {zone.location}
-								<br />
-								<span className={styles[zone.severity]}>
-									{zone.severity.charAt(0).toUpperCase() + zone.severity.slice(1)} Priority
-								</span>
-								{zone.severity !== 'safe' && (
-									<>
+				{zones && zones.length > 0 ? (
+					zones.map(zone => {
+						console.log('Rendering zone:', zone.name, 'Coordinates:', zone.coordinates, 'Radius:', zone.radius);
+
+						// Normalize coordinates to array format
+						const coords = Array.isArray(zone.coordinates)
+							? zone.coordinates
+							: zone.coordinates?.latitude && zone.coordinates?.longitude
+							? [zone.coordinates.latitude, zone.coordinates.longitude]
+							: null;
+
+						console.log('Zone', zone.name, 'Final coords:', coords);
+
+						if (!coords) {
+							console.warn('Skipping zone due to missing coords:', zone.name);
+							return null;
+						}
+
+						return (
+							<Circle
+								key={zone.id || zone._id}
+								center={coords}
+								radius={zone.radius || 5000}
+								pathOptions={{
+									color: getSeverityColor(zone.severity),
+									fillColor: getSeverityColor(zone.severity),
+									fillOpacity: getSeverityOpacity(zone.severity),
+									weight: 2,
+								}}
+								eventHandlers={{
+									click: () => onZoneClick(zone),
+								}}
+							>
+								<Tooltip direction='top' offset={[0, -10]} opacity={0.9}>
+									<div className={styles.tooltip}>
+										<strong>{zone.name}</strong> - {zone.location}
 										<br />
-										<span className={styles.teamStatus}>
-											{zone.hasAssignedTeam !== false ? '✓ Team Assigned' : '⚠ No Team Assigned'}
+										<span className={styles[zone.severity]}>
+											{zone.severity.charAt(0).toUpperCase() + zone.severity.slice(1)} Priority
 										</span>
-									</>
-								)}
-							</div>
-						</Tooltip>
-					</Circle>
-				))}
+										{zone.severity !== 'safe' && (
+											<>
+												<br />
+												<span className={styles.teamStatus}>
+													{zone.hasAssignedTeam !== false ? '✓ Team Assigned' : '⚠ No Team Assigned'}
+												</span>
+											</>
+										)}
+									</div>
+								</Tooltip>
+							</Circle>
+						);
+					})
+				) : (
+					<div>No zones to display</div>
+				)}
 			</MapContainer>
 		</div>
 	);

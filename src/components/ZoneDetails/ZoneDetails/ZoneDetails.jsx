@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Polygon, Marker, Popup } from 'react-leaflet';
 import NeedsList from '../components/NeedsList/NeedsList';
 import TabPanel from '../components/TabPanel/TabPanel';
-import { zoneDetails } from '../../../data/mockData';
+import { zoneService, authService } from '../../../services';
 import 'leaflet/dist/leaflet.css';
 import styles from './ZoneDetails.module.css';
 
@@ -11,13 +11,42 @@ const ZoneDetails = () => {
 	const { zoneId } = useParams();
 	const navigate = useNavigate();
 	const [activeTab, setActiveTab] = useState('summary');
+	const [zone, setZone] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
+	const [user, setUser] = useState(null);
 
-	const zone = zoneDetails[zoneId];
+	useEffect(() => {
+		fetchZoneDetails();
+		const storedUser = authService.getStoredUser();
+		setUser(storedUser);
+	}, [zoneId]);
 
-	if (!zone) {
+	const fetchZoneDetails = async () => {
+		try {
+			setLoading(true);
+			const response = await zoneService.getZoneDetails(zoneId);
+			setZone(response);
+		} catch (err) {
+			console.error('Error fetching zone details:', err);
+			setError('Failed to load zone details');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	if (loading) {
 		return (
 			<div className={styles.container}>
-				<div className={styles.error}>Zone not found</div>
+				<div className={styles.loading}>Loading zone details...</div>
+			</div>
+		);
+	}
+
+	if (error || !zone) {
+		return (
+			<div className={styles.container}>
+				<div className={styles.error}>{error || 'Zone not found'}</div>
 			</div>
 		);
 	}
@@ -26,17 +55,23 @@ const ZoneDetails = () => {
 	const createZoneBoundary = (center, radiusInKm = 5) => {
 		const points = 32;
 		const coords = [];
+		// Handle both array [lat, lng] and object {lat, lng} formats
+		const lat = Array.isArray(center) ? center[0] : center.lat;
+		const lng = Array.isArray(center) ? center[1] : center.lng;
+
 		for (let i = 0; i < points; i++) {
 			const angle = (i * 360) / points;
-			const lat = center[0] + (radiusInKm / 111) * Math.cos((angle * Math.PI) / 180);
-			const lng =
-				center[1] + (radiusInKm / (111 * Math.cos((center[0] * Math.PI) / 180))) * Math.sin((angle * Math.PI) / 180);
-			coords.push([lat, lng]);
+			const newLat = lat + (radiusInKm / 111) * Math.cos((angle * Math.PI) / 180);
+			const newLng = lng + (radiusInKm / (111 * Math.cos((lat * Math.PI) / 180))) * Math.sin((angle * Math.PI) / 180);
+			coords.push([newLat, newLng]);
 		}
 		return coords;
 	};
 
-	const zoneBoundary = createZoneBoundary(zone.coordinates);
+	const zoneBoundary = createZoneBoundary(
+		zone.zone?.coordinates || zone.coordinates,
+		(zone.zone?.radius || zone.radius || 5000) / 1000
+	);
 
 	return (
 		<div className={styles.container}>
@@ -45,7 +80,7 @@ const ZoneDetails = () => {
 					<button className={styles.backBtn} onClick={() => navigate('/disaster-map')}>
 						← Back
 					</button>
-					<div className={styles.logo}>AIPDRRP</div>
+					<div className={styles.logo}>DRIN</div>
 					<div className={styles.title}>
 						{zone.name} - ({zone.severity === 'critical' ? 'Danger' : zone.severity})
 					</div>
@@ -54,7 +89,7 @@ const ZoneDetails = () => {
 					<div className={styles.avatar}>
 						<span>👤</span>
 					</div>
-					<span className={styles.username}>Ahmed Hossain</span>
+					<span className={styles.username}>{user?.fullName || user?.full_name || 'User'}</span>
 				</div>
 			</header>
 

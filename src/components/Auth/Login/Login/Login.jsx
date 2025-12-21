@@ -1,24 +1,50 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../../../../services';
 import styles from './Login.module.css';
 
 function Login() {
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
 	});
+	const [error, setError] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const handleChange = e => {
 		setFormData({
 			...formData,
 			[e.target.name]: e.target.value,
 		});
+		// Clear error when user types
+		if (error) setError('');
 	};
 
-	const handleSubmit = e => {
+	const handleSubmit = async e => {
 		e.preventDefault();
-		// Handle login logic here
-		console.log('Login attempt:', formData);
+		setError('');
+		setLoading(true);
+
+		try {
+			const response = await authService.login(formData.email, formData.password);
+			console.log('Login successful:', response);
+
+			// Redirect based on user role
+			const user = response.user;
+			if (user.role === 'admin') {
+				navigate('/admin');
+			} else if (user.role === 'leader') {
+				navigate('/disaster-map');
+			} else {
+				navigate('/disaster-map');
+			}
+		} catch (err) {
+			console.error('Login error:', err);
+			setError(err.message || 'Invalid email or password');
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -33,6 +59,8 @@ function Login() {
 					</div>
 
 					<form className={styles.form} onSubmit={handleSubmit}>
+						{error && <div className={styles.errorMessage}>{error}</div>}
+
 						<div className={styles.formGroup}>
 							<label htmlFor='email' className={styles.label}>
 								Email Address
@@ -46,6 +74,7 @@ function Login() {
 								placeholder='you@example.com'
 								className={styles.input}
 								required
+								disabled={loading}
 							/>
 						</div>
 
@@ -62,6 +91,7 @@ function Login() {
 								placeholder='Enter your password'
 								className={styles.input}
 								required
+								disabled={loading}
 							/>
 						</div>
 
@@ -71,8 +101,8 @@ function Login() {
 							</a>
 						</div>
 
-						<button type='submit' className={`${styles.btn} ${styles.btnPrimary}`}>
-							Log In
+						<button type='submit' className={`${styles.btn} ${styles.btnPrimary}`} disabled={loading}>
+							{loading ? 'Logging in...' : 'Log In'}
 						</button>
 					</form>
 
