@@ -1,7 +1,15 @@
 import styles from './NeedsList.module.css';
 
 const NeedsList = ({ reliefNeeds }) => {
+	if (!reliefNeeds || typeof reliefNeeds !== 'object') {
+		return <div className={styles.needsList}>No relief needs data available</div>;
+	}
+
 	const renderCategory = categoryData => {
+		if (!categoryData || !categoryData.items || !Array.isArray(categoryData.items)) {
+			return null;
+		}
+
 		return (
 			<div className={styles.category} key={categoryData.category}>
 				<div className={styles.categoryHeader}>

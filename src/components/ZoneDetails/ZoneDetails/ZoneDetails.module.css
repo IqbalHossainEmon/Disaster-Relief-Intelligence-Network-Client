@@ -8,12 +8,20 @@
 	overflow: hidden;
 }
 
+.loading,
 .error {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
 	font-size: 1.5rem;
+}
+
+.loading {
+	color: #4a90e2;
+}
+
+.error {
 	color: #ff4444;
 }
 

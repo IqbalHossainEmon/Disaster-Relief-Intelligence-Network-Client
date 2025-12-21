@@ -1,14 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './SignUp.module.css';
 import ProgressIndicator from '../components/ProgressIndicator/ProgressIndicator';
 import Step1BasicInfo from '../components/Step1BasicInfo/Step1BasicInfo';
 import Step2RoleSelection from '../components/Step2RoleSelection/Step2RoleSelection';
 import Step3OrganizationSetup from '../components/Step3OrganizationSetup/Step3OrganizationSetup';
 import Step3JoinOrganization from '../components/Step3JoinOrganization/Step3JoinOrganization';
+import { authService } from '../../../../services';
 
 function SignUp() {
+	const navigate = useNavigate();
 	const [currentStep, setCurrentStep] = useState(1);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState('');
 	const [formData, setFormData] = useState({
 		// Step 1: Basic Info
 		fullName: '',
@@ -60,10 +64,70 @@ function SignUp() {
 		}
 	};
 
-	const handleSubmit = e => {
+	const handleSubmit = async e => {
 		e.preventDefault();
-		// Handle sign up logic here
-		console.log('Sign up attempt:', formData);
+		setError('');
+		setLoading(true);
+
+		try {
+			// Validate password match
+			if (formData.password !== formData.confirmPassword) {
+				setError('Passwords do not match');
+				setLoading(false);
+				return;
+			}
+
+			// Prepare registration data based on role
+			const registrationData = {
+				fullName: formData.fullName,
+				email: formData.email,
+				password: formData.password,
+				role: formData.role,
+			};
+
+			if (formData.role === 'leader') {
+				// Group Leader - include organization details
+				registrationData.organizationName = formData.organizationName;
+				registrationData.organizationType = formData.organizationType;
+				registrationData.organizationDescription = formData.organizationDescription;
+				registrationData.organizationPhone = formData.organizationPhone;
+				registrationData.organizationAddress = formData.organizationAddress;
+
+				// Add type-specific fields
+				if (formData.organizationType === 'ngo') {
+					registrationData.registrationNumber = formData.registrationNumber;
+					registrationData.website = formData.website;
+				} else if (formData.organizationType === 'volunteer') {
+					registrationData.volunteerCount = formData.volunteerCount;
+					registrationData.establishedYear = formData.establishedYear;
+					registrationData.expertise = formData.expertise;
+				} else if (formData.organizationType === 'government') {
+					registrationData.department = formData.department;
+					registrationData.officialId = formData.officialId;
+				}
+			} else if (formData.role === 'member') {
+				// Team Member - include organization code
+				registrationData.organizationCode = formData.organizationCode;
+			}
+
+			// Call the register API
+			const response = await authService.register(registrationData);
+
+			// Store token and user data
+			localStorage.setItem('token', response.token);
+			localStorage.setItem('user', JSON.stringify(response.user));
+
+			// Navigate based on role
+			if (response.user.role === 'leader' || response.user.role === 'admin') {
+				navigate('/admin');
+			} else {
+				navigate('/disaster-map');
+			}
+		} catch (err) {
+			setError(err.message || 'Registration failed. Please try again.');
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const getSubtitle = () => {
@@ -87,6 +151,8 @@ function SignUp() {
 
 					<ProgressIndicator currentStep={currentStep} />
 
+					{error && <div className={styles.error}>{error}</div>}
+
 					<form className={styles.form} onSubmit={currentStep === 3 ? handleSubmit : handleNext}>
 						{currentStep === 1 && <Step1BasicInfo formData={formData} handleChange={handleChange} />}
 
@@ -102,12 +168,17 @@ function SignUp() {
 
 						<div className={styles.buttonGroup}>
 							{currentStep > 1 && (
-								<button type='button' onClick={handleBack} className={`${styles.btn} ${styles.btnSecondary}`}>
+								<button
+									type='button'
+									onClick={handleBack}
+									className={`${styles.btn} ${styles.btnSecondary}`}
+									disabled={loading}
+								>
 									Back
 								</button>
 							)}
-							<button type='submit' className={`${styles.btn} ${styles.btnPrimary}`}>
-								{currentStep < 3 ? 'Continue' : 'Create Account'}
+							<button type='submit' className={`${styles.btn} ${styles.btnPrimary}`} disabled={loading}>
+								{loading ? 'Processing...' : currentStep < 3 ? 'Continue' : 'Create Account'}
 							</button>
 						</div>
 					</form>
