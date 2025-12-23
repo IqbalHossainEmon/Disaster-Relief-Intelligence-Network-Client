@@ -44,6 +44,13 @@ const assignmentService = {
 		const response = await API.patch(`/assignments/${assignmentId}`, statusData);
 		return response.data;
 	},
+
+	// Upload Evidence Files
+	uploadEvidence: async formData => {
+		// Don't manually set Content-Type - let axios set it with proper boundary
+		const response = await API.post('/upload/evidence', formData);
+		return response.data;
+	},
 };
 
 export default assignmentService;

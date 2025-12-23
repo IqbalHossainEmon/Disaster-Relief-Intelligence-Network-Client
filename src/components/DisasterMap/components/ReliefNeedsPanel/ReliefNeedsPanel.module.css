@@ -7,7 +7,7 @@
 	background: rgba(26, 26, 26, 0.98);
 	backdrop-filter: blur(10px);
 	border-left: 1px solid #3a3a3a;
-	z-index: 1000;
+	z-index: 3;
 	display: flex;
 	flex-direction: column;
 	animation: slideIn 0.3s ease-out;
@@ -31,7 +31,7 @@
 	background: rgba(26, 26, 26, 0.95);
 	position: sticky;
 	top: 0;
-	z-index: 10;
+	z-index: 2;
 }
 
 .header h2 {
@@ -67,6 +67,128 @@
 	color: #fff;
 }
 
+.statsGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+	padding: 1rem 1.5rem;
+	border-bottom: 1px solid #3a3a3a;
+}
+
+.statItem {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.statLabel {
+	font-size: 0.8rem;
+	color: #aaa;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.statValue {
+	font-size: 1rem;
+	font-weight: 600;
+	color: #fff;
+}
+
+.description {
+	padding: 1rem 1.5rem;
+	border-bottom: 1px solid #3a3a3a;
+}
+
+.description p {
+	margin: 0;
+	color: #ddd;
+	line-height: 1.5;
+	font-size: 0.95rem;
+}
+
+/* Assignment Section Styles */
+.assignmentSection {
+	padding: 0 1.5rem 1rem;
+	border-bottom: 1px solid #3a3a3a;
+}
+
+.assignmentCard {
+	background: rgba(74, 144, 226, 0.1);
+	border: 1px solid rgba(74, 144, 226, 0.3);
+	border-radius: 8px;
+	padding: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.assignmentCard:last-child {
+	margin-bottom: 0;
+}
+
+.assignmentHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 0.75rem;
+}
+
+.teamName {
+	margin: 0;
+	font-size: 1rem;
+	color: #fff;
+	font-weight: 600;
+}
+
+.teamMembers {
+	margin: 0.25rem 0 0 0;
+	font-size: 0.85rem;
+	color: #aaa;
+}
+
+.statusBadge {
+	padding: 0.25rem 0.75rem;
+	border-radius: 12px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.statusBadge.in_progress {
+	background: rgba(74, 144, 226, 0.2);
+	color: #4a90e2;
+	border: 1px solid #4a90e2;
+}
+
+.statusBadge.completed {
+	background: rgba(76, 175, 80, 0.2);
+	color: #4caf50;
+	border: 1px solid #4caf50;
+}
+
+.statusBadge.pending {
+	background: rgba(255, 193, 7, 0.2);
+	color: #ffc107;
+	border: 1px solid #ffc107;
+}
+
+.assignmentNotes {
+	margin: 0 0 0.75rem 0;
+	font-size: 0.875rem;
+	color: #ccc;
+	line-height: 1.4;
+}
+
+.assignmentDates {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.8rem;
+	color: #999;
+}
+
+.assignmentDates span {
+	display: block;
+}
+
 .badges {
 	padding: 1rem 1.5rem;
 	display: flex;
@@ -100,6 +222,12 @@
 	border: 1px solid #ffd93d;
 }
 
+.badge.low {
+	background: rgba(64, 156, 255, 0.2);
+	color: #409cff;
+	border: 1px solid #409cff;
+}
+
 .badge.safe {
 	background: rgba(107, 202, 239, 0.2);
 	color: #6bcaef;
@@ -114,19 +242,20 @@
 .content {
 	flex: 1;
 	overflow-y: auto;
-	padding-bottom: 1rem;
+	display: flex;
+	flex-direction: column;
 }
 
 .sectionTitle {
-	padding: 1rem 1.5rem;
+	padding: 1rem 1.5rem 0.5rem;
 	margin: 0;
 	font-size: 1.1rem;
 	color: #fff;
-	border-bottom: 1px solid #3a3a3a;
-	background: rgba(42, 42, 42, 0.5);
-	position: sticky;
-	top: 0;
-	z-index: 5;
+	font-weight: 600;
+}
+
+.needsContainer {
+	padding: 0;
 }
 
 .noData {
@@ -135,10 +264,33 @@
 	color: #888;
 }
 
+.successMessage {
+	padding: 1rem 1.5rem;
+	background: rgba(76, 175, 80, 0.1);
+	border: 1px solid #4caf50;
+	border-radius: 8px;
+	color: #4caf50;
+	margin: 0 1.5rem 1rem;
+	font-size: 0.95rem;
+	animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+	from {
+		transform: translateY(-10px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
 .footer {
 	padding: 1.5rem;
 	border-top: 1px solid #3a3a3a;
 	background: rgba(26, 26, 26, 0.95);
+	margin-top: auto;
 }
 
 .applyBtn {

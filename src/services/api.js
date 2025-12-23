@@ -14,6 +14,12 @@ API.interceptors.request.use(
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
 		}
+
+		// If sending FormData, remove Content-Type to let browser set it with boundary
+		if (config.data instanceof FormData) {
+			delete config.headers['Content-Type'];
+		}
+
 		return config;
 	},
 	error => {
@@ -29,6 +35,18 @@ API.interceptors.response.use(
 	},
 	error => {
 		// Handle common errors
+		console.error('API Error:', error);
+		console.error('Error details:', {
+			message: error.message,
+			response: error.response?.data,
+			status: error.response?.status,
+			config: {
+				url: error.config?.url,
+				method: error.config?.method,
+				data: error.config?.data instanceof FormData ? 'FormData' : error.config?.data,
+			},
+		});
+
 		if (error.response) {
 			// Server responded with error
 			const { status, data } = error.response;
@@ -44,6 +62,7 @@ API.interceptors.response.use(
 			return Promise.reject(data?.error || { message: 'An error occurred' });
 		} else if (error.request) {
 			// Request made but no response
+			console.error('No response received from server. Request:', error.request);
 			return Promise.reject({ message: 'Network error. Please check your connection.' });
 		} else {
 			// Something else happened
