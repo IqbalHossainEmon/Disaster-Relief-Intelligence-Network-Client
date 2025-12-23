@@ -159,7 +159,7 @@
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
-	z-index: 1000;
+	z-index: 3;
 }
 
 .needsHeader {
@@ -168,7 +168,7 @@
 	position: sticky;
 	top: 0;
 	background: rgba(26, 26, 26, 0.98);
-	z-index: 10;
+	z-index: 2;
 }
 
 .criticalBadge {

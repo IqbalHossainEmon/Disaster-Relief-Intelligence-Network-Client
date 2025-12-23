@@ -9,11 +9,26 @@ function AssignmentRequests() {
 	const [approvedRequests, setApprovedRequests] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
+	const [notification, setNotification] = useState(null);
 
 	// Fetch assignment requests on component mount
 	useEffect(() => {
 		fetchRequests();
 	}, []);
+
+	// Auto-hide notification after 5 seconds
+	useEffect(() => {
+		if (notification) {
+			const timer = setTimeout(() => {
+				setNotification(null);
+			}, 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [notification]);
+
+	const showNotification = (message, type = 'success') => {
+		setNotification({ message, type });
+	};
 
 	const fetchRequests = async () => {
 		try {
@@ -26,8 +41,18 @@ function AssignmentRequests() {
 				assignmentService.getRequests({ status: 'approved' }),
 			]);
 
-			setPendingRequests(pendingResponse.requests || []);
-			setApprovedRequests(approvedResponse.requests || []);
+			// Handle both formats: data.requests or data array
+			const pendingData = pendingResponse.requests || [];
+			const approvedData = approvedResponse.requests || [];
+
+			// Sort by createdAt in descending order (newest first)
+			const sortedPending = [...pendingData].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+			const sortedApproved = [...approvedData].sort(
+				(a, b) => new Date(b.approvalDate || b.createdAt) - new Date(a.approvalDate || a.createdAt)
+			);
+
+			setPendingRequests(sortedPending);
+			setApprovedRequests(sortedApproved);
 		} catch (err) {
 			console.error('Error fetching requests:', err);
 			setError('Failed to load assignment requests');
@@ -42,9 +67,10 @@ function AssignmentRequests() {
 			// Refresh the requests list
 			await fetchRequests();
 			setSelectedRequest(null);
+			showNotification('Request approved successfully!', 'success');
 		} catch (err) {
 			console.error('Error approving request:', err);
-			alert('Failed to approve request: ' + (err.message || 'Unknown error'));
+			showNotification('Failed to approve request: ' + (err.message || 'Unknown error'), 'error');
 		}
 	};
 
@@ -54,9 +80,10 @@ function AssignmentRequests() {
 			// Refresh the requests list
 			await fetchRequests();
 			setSelectedRequest(null);
+			showNotification('Request rejected successfully!', 'success');
 		} catch (err) {
 			console.error('Error rejecting request:', err);
-			alert('Failed to reject request: ' + (err.message || 'Unknown error'));
+			showNotification('Failed to reject request: ' + (err.message || 'Unknown error'), 'error');
 		}
 	};
 
@@ -98,21 +125,21 @@ function AssignmentRequests() {
 								</tr>
 							</thead>
 							<tbody>
-								{pendingRequests.map(request => (
-									<tr key={request.id}>
-										<td>{request.requestedBy?.fullName || request.requestedBy?.full_name || 'N/A'}</td>
-										<td>{request.organization?.name || 'N/A'}</td>
-										<td>{request.zone?.name || request.zoneId}</td>
-										<td>
-											{new Date(request.createdAt || request.created_at || request.submissionDate).toLocaleDateString()}
-										</td>
-										<td>
-											<button className={styles.detailsBtn} onClick={() => setSelectedRequest(request)}>
-												Show Details
-											</button>
-										</td>
-									</tr>
-								))}
+								{pendingRequests.map(request => {
+									return (
+										<tr key={request.createdAt + request.zoneName}>
+											<td>{request.requestedByName || 'N/A'}</td>
+											<td>{request.organizationName || 'N/A'}</td>
+											<td>{request.zoneName || request.zoneId}</td>
+											<td>{request.createdAt ? new Date(request.createdAt).toLocaleDateString() : 'N/A'}</td>
+											<td>
+												<button className={styles.detailsBtn} onClick={() => setSelectedRequest(request)}>
+													Show Details
+												</button>
+											</td>
+										</tr>
+									);
+								})}
 							</tbody>
 						</table>
 					)}
@@ -137,13 +164,11 @@ function AssignmentRequests() {
 							</thead>
 							<tbody>
 								{approvedRequests.map(request => (
-									<tr key={request.id}>
-										<td>{request.requestedBy?.fullName || request.requestedBy?.full_name || 'N/A'}</td>
-										<td>{request.organization?.name || 'N/A'}</td>
-										<td>{request.zone?.name || request.zoneId}</td>
-										<td>
-											{new Date(request.approvedAt || request.approved_at || request.approvalDate).toLocaleDateString()}
-										</td>
+									<tr key={request.createdAt + request.zoneName}>
+										<td>{request.requestedByName || 'N/A'}</td>
+										<td>{request.organizationName || 'N/A'}</td>
+										<td>{request.zoneName || request.zoneId}</td>
+										<td>{request.approvalDate ? new Date(request.approvalDate).toLocaleDateString() : 'N/A'}</td>
 									</tr>
 								))}
 							</tbody>
@@ -160,6 +185,37 @@ function AssignmentRequests() {
 					onApprove={handleApprove}
 					onReject={handleReject}
 				/>
+			)}
+
+			{/* Notification Toast */}
+			{notification && (
+				<div className={`${styles.notification} ${styles[notification.type]}`}>
+					<div className={styles.notificationContent}>
+						{notification.type === 'success' ? (
+							<svg width='24' height='24' viewBox='0 0 24 24' fill='none' className={styles.notificationIcon}>
+								<circle cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='2' />
+								<path
+									d='M9 12l2 2 4-4'
+									stroke='currentColor'
+									strokeWidth='2'
+									strokeLinecap='round'
+									strokeLinejoin='round'
+								/>
+							</svg>
+						) : (
+							<svg width='24' height='24' viewBox='0 0 24 24' fill='none' className={styles.notificationIcon}>
+								<circle cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='2' />
+								<path d='M12 8v4m0 4h.01' stroke='currentColor' strokeWidth='2' strokeLinecap='round' />
+							</svg>
+						)}
+						<span>{notification.message}</span>
+					</div>
+					<button className={styles.notificationClose} onClick={() => setNotification(null)}>
+						<svg width='18' height='18' viewBox='0 0 24 24' fill='none'>
+							<path d='M18 6L6 18M6 6l12 12' stroke='currentColor' strokeWidth='2' strokeLinecap='round' />
+						</svg>
+					</button>
+				</div>
 			)}
 		</div>
 	);

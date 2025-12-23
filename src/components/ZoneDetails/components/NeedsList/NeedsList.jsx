@@ -27,10 +27,12 @@ const NeedsList = ({ reliefNeeds }) => {
 				<ul className={styles.itemsList}>
 					{categoryData.items.map((item, index) => (
 						<li key={index} className={styles.item}>
-							<span className={styles.itemName}>{item.name}:</span>
-							<span className={styles.itemValue}>
-								{item.needed.toLocaleString()} {item.unit}
-							</span>
+							<div className={styles.itemHeader}>
+								<span className={styles.itemName}>{item.name}:</span>
+								<span className={styles.itemValue}>
+									{item.needed.toLocaleString()} {item.unit}
+								</span>
+							</div>
 							{item.subtext && <span className={styles.itemSubtext}>{item.subtext}</span>}
 						</li>
 					))}

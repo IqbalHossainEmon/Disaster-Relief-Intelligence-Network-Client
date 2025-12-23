@@ -6,7 +6,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 1000;
+	z-index: 3;
 	padding: 2rem;
 	overflow-y: auto;
 	animation: fadeIn 0.3s ease-out;
@@ -92,12 +92,23 @@
 	color: #ff3b5c;
 	cursor: pointer;
 	transition: all 0.2s ease;
-	z-index: 10;
+	z-index: 2;
 }
 
 .closeBtn:hover {
 	background: rgba(255, 59, 92, 0.25);
 	transform: rotate(90deg);
+}
+
+.loadingContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 4rem 2rem;
+	gap: 1rem;
+	color: #b8b0d4;
+	font-size: 1rem;
 }
 
 .modalTitle {
@@ -421,7 +432,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	z-index: 2000;
+	z-index: 4;
 	padding: 2rem;
 	animation: fadeIn 0.2s ease-out;
 	cursor: zoom-out;
@@ -443,7 +454,7 @@
 	color: white;
 	cursor: pointer;
 	transition: all 0.2s ease;
-	z-index: 2001;
+	z-index: 5;
 }
 
 .imageViewerClose:hover {
@@ -484,5 +495,127 @@
 	.imageViewerImage {
 		max-width: 100%;
 		max-height: 90vh;
+	}
+}
+
+/* Reject Modal Styles */
+.rejectModalBackdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.85);
+	backdrop-filter: blur(6px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	padding: 2rem;
+	animation: fadeIn 0.2s ease-out;
+}
+
+.rejectModalContent {
+	background: linear-gradient(145deg, #3a3456 0%, #2d2942 50%, #292940 100%);
+	border-radius: 16px;
+	padding: 2rem;
+	max-width: 500px;
+	width: 100%;
+	border: 1px solid rgba(110, 86, 244, 0.3);
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+	animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rejectModalTitle {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #ffffff;
+	margin: 0 0 0.5rem 0;
+}
+
+.rejectModalDescription {
+	font-size: 0.95rem;
+	color: #b8b0d4;
+	margin: 0 0 1.5rem 0;
+}
+
+.rejectTextarea {
+	width: 100%;
+	padding: 0.875rem;
+	font-size: 0.95rem;
+	font-family: inherit;
+	color: #ffffff;
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(110, 86, 244, 0.3);
+	border-radius: 8px;
+	resize: vertical;
+	min-height: 100px;
+	transition: all 0.2s ease;
+}
+
+.rejectTextarea:focus {
+	outline: none;
+	border-color: #6e56f4;
+	background: rgba(0, 0, 0, 0.4);
+	box-shadow: 0 0 0 3px rgba(110, 86, 244, 0.15);
+}
+
+.rejectTextarea::placeholder {
+	color: rgba(184, 176, 212, 0.5);
+}
+
+.rejectModalButtons {
+	display: flex;
+	gap: 1rem;
+	margin-top: 1.5rem;
+	justify-content: flex-end;
+}
+
+.rejectModalCancelBtn,
+.rejectModalConfirmBtn {
+	padding: 0.75rem 1.5rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.rejectModalCancelBtn {
+	background: rgba(255, 255, 255, 0.1);
+	color: #ffffff;
+}
+
+.rejectModalCancelBtn:hover {
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.rejectModalConfirmBtn {
+	background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+	color: #ffffff;
+}
+
+.rejectModalConfirmBtn:hover:not(:disabled) {
+	background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+	transform: translateY(-1px);
+	box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4);
+}
+
+.rejectModalConfirmBtn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+	.rejectModalContent {
+		padding: 1.5rem;
+	}
+
+	.rejectModalButtons {
+		flex-direction: column-reverse;
+		gap: 0.75rem;
+	}
+
+	.rejectModalCancelBtn,
+	.rejectModalConfirmBtn {
+		width: 100%;
 	}
 }
