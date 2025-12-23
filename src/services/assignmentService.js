@@ -36,6 +36,8 @@ const assignmentService = {
 	getAssignments: async (params = {}) => {
 		const queryParams = new URLSearchParams(params).toString();
 		const response = await API.get(`/assignments${queryParams ? `?${queryParams}` : ''}`);
+		console.log(queryParams);
+
 		return response.data;
 	},
 
