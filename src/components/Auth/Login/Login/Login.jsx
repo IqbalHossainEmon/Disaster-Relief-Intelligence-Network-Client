@@ -34,9 +34,8 @@ function Login() {
 			const user = response.user;
 			if (user.role === 'admin') {
 				navigate('/admin');
-			} else if (user.role === 'leader') {
-				navigate('/disaster-map');
 			} else {
+				// Leader and Member both go to disaster map
 				navigate('/disaster-map');
 			}
 		} catch (err) {

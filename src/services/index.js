@@ -7,4 +7,5 @@ export { default as contributionService } from './contributionService';
 export { default as notificationService } from './notificationService';
 export { default as adminService } from './adminService';
 export { default as uploadService } from './uploadService';
+export { default as userService } from './userService';
 export { default as API } from './api';

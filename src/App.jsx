@@ -11,12 +11,21 @@ import Login from './components/Auth/Login/Login/Login';
 import SignUp from './components/Auth/SignUp/SignUp/SignUp';
 import DisasterMap from './components/DisasterMap/DisasterMap/DisasterMap';
 import ZoneDetails from './components/ZoneDetails/ZoneDetails/ZoneDetails';
+import TeamAssignments from './components/Admin/TeamAssignments/TeamAssignments/TeamAssignments';
+import ContributionHistory from './components/Admin/ContributionHistory/ContributionHistory/ContributionHistory';
+import TeamManage from './components/Admin/TeamManage/TeamManage/TeamManage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
 	const location = useLocation();
 	const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 	const isAdminPage = location.pathname.startsWith('/admin');
-	const isDisasterMapPage = location.pathname.startsWith('/disaster-map') || location.pathname.startsWith('/zone');
+	const isDisasterMapPage =
+		location.pathname.startsWith('/disaster-map') ||
+		location.pathname.startsWith('/zone') ||
+		location.pathname === '/team-assignments' ||
+		location.pathname === '/contribution-history' ||
+		location.pathname === '/team-manage';
 	const showFooter = !isAuthPage && !isAdminPage && !isDisasterMapPage;
 
 	return (
@@ -28,7 +37,17 @@ function App() {
 				<Route path='/signup' element={<SignUp />} />
 				<Route path='/disaster-map' element={<DisasterMap />} />
 				<Route path='/zone/:zoneId' element={<ZoneDetails />} />
-				<Route path='/admin' element={<AdminDashboard />}>
+				<Route path='/team-assignments' element={<TeamAssignments />} />
+				<Route path='/contribution-history' element={<ContributionHistory />} />
+				<Route path='/team-manage' element={<TeamManage />} />
+				<Route
+					path='/admin'
+					element={
+						<ProtectedRoute requiredRole='admin'>
+							<AdminDashboard />
+						</ProtectedRoute>
+					}
+				>
 					<Route index element={<Navigate to='/admin/assignment-requests' replace />} />
 					<Route path='assignment-requests' element={<AssignmentRequests />} />
 					<Route path='user-management' element={<UserManagement />} />

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import MapView from '../components/MapView/MapView';
 import ReliefNeedsPanel from '../components/ReliefNeedsPanel/ReliefNeedsPanel';
 import { zoneService } from '../../../services';
 import styles from './DisasterMap.module.css';
 
 const DisasterMap = () => {
+	const location = useLocation();
 	const [selectedZone, setSelectedZone] = useState(null);
 	const [zones, setZones] = useState([]);
 	const [zoneDetails, setZoneDetails] = useState({});
@@ -202,22 +204,34 @@ const DisasterMap = () => {
 						<h2 className={styles.sidebarTitle}>Feni – The flood zones</h2>
 					</div>
 					<nav className={styles.nav}>
-						<div className={`${styles.navItem} ${styles.active}`}>
+						<Link
+							to='/disaster-map'
+							className={`${styles.navItem} ${location.pathname === '/disaster-map' ? styles.active : ''}`}
+						>
 							<span className={styles.navIcon}>🗺️</span>
 							<span>Disaster Map</span>
-						</div>
-						<div className={styles.navItem}>
+						</Link>
+						<Link
+							to='/team-assignments'
+							className={`${styles.navItem} ${location.pathname === '/team-assignments' ? styles.active : ''}`}
+						>
 							<span className={styles.navIcon}>👥</span>
 							<span>Team Assignments</span>
-						</div>
-						<div className={styles.navItem}>
+						</Link>
+						<Link
+							to='/contribution-history'
+							className={`${styles.navItem} ${location.pathname === '/contribution-history' ? styles.active : ''}`}
+						>
 							<span className={styles.navIcon}>📋</span>
 							<span>Contribution History</span>
-						</div>
-						<div className={styles.navItem}>
+						</Link>
+						<Link
+							to='/team-manage'
+							className={`${styles.navItem} ${location.pathname === '/team-manage' ? styles.active : ''}`}
+						>
 							<span className={styles.navIcon}>👨‍👩‍👧‍👦</span>
 							<span>Team Manage</span>
-						</div>
+						</Link>
 					</nav>
 				</aside>
 

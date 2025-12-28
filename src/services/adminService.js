@@ -20,6 +20,24 @@ const adminService = {
 		return response.data;
 	},
 
+	// Update User Role (Admin Only)
+	updateUserRole: async (userId, roleData) => {
+		const response = await API.patch(`/admin/users/${userId}/role`, roleData);
+		return response.data;
+	},
+
+	// Update User Info (Admin Only)
+	updateUser: async (userId, userData) => {
+		const response = await API.put(`/admin/users/${userId}`, userData);
+		return response.data;
+	},
+
+	// Delete User (Admin Only)
+	deleteUser: async userId => {
+		const response = await API.delete(`/admin/users/${userId}`);
+		return response.data;
+	},
+
 	// Get All Organizations (Admin Only)
 	getAllOrganizations: async (params = {}) => {
 		const queryParams = new URLSearchParams(params).toString();

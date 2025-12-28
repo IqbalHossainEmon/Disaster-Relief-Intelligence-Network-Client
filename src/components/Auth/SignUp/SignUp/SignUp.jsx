@@ -118,9 +118,10 @@ function SignUp() {
 			localStorage.setItem('user', JSON.stringify(response.user));
 
 			// Navigate based on role
-			if (response.user.role === 'leader' || response.user.role === 'admin') {
+			if (response.user.role === 'admin') {
 				navigate('/admin');
 			} else {
+				// Leader and Member both go to disaster map
 				navigate('/disaster-map');
 			}
 		} catch (err) {
